@@ -45,7 +45,8 @@ typedef T_elem_list_process *T_process_list;
 extern T_process process[NB_PROCESS];
 
 void process_init(T_process *process,const unsigned char *name,const void (*fonction)(void));
-void toto (void);
+void toto_func (void);
+void titi_func(void);
 void os_init (void);
 void os_sleep(unsigned long time);
 void process_start(T_process *process);

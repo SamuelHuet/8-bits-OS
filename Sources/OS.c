@@ -12,6 +12,7 @@ T_process *running_process=NULL; /*Pointeur sur le processus actif  */
 T_process_list stopped; /* process non démarrer */
 T_process_list waiting; /*process en attente */
 T_process_list process_by_prio[NB_PRIORITY]; /* tableau de liste de priorité */ 
+T_process_list ready; /*process en attente d'election*/
 
 void toto (void){
 }
@@ -36,6 +37,7 @@ void os_init (void) {
 		process[i].fonction=NULL;
 	}
 	
+	ready = NULL;
 	stopped = NULL;
 	waiting = NULL;
 	
@@ -50,5 +52,15 @@ void os_sleep(unsigned long time){
 }
 
 void process_start(T_process *process){
-	process->fonction();
+	chained_list_append(ready, process);
+}
+
+void os_start(){
+	T_process *process = ready->process;
+	while(1){
+		process->fonction();
+		chained_list_pop_first(ready);
+		chained_list_append(process);
+		process = ready->process
+	}
 }

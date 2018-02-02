@@ -1,31 +1,30 @@
 /* ###################################################################
-**     Filename    : main.c
-**     Project     : OS_Comperatif
-**     Processor   : MC9S08QE8CLC
-**     Version     : Driver 01.12
-**     Compiler    : CodeWarrior HCS08 C Compiler
-**     Date/Time   : 2018-01-12, 15:51, # CodeGen: 0
-**     Abstract    :
-**         Main module.
-**         This module contains user's application code.
-**     Settings    :
-**     Contents    :
-**         No public methods
-**
-** ###################################################################*/
+ **     Filename    : main.c
+ **     Project     : OS_Comperatif
+ **     Processor   : MC9S08QE8CLC
+ **     Version     : Driver 01.12
+ **     Compiler    : CodeWarrior HCS08 C Compiler
+ **     Date/Time   : 2018-01-12, 15:51, # CodeGen: 0
+ **     Abstract    :
+ **         Main module.
+ **         This module contains user's application code.
+ **     Settings    :
+ **     Contents    :
+ **         No public methods
+ **
+ ** ###################################################################*/
 /*!
-** @file main.c
-** @version 01.12
-** @brief
-**         Main module.
-**         This module contains user's application code.
-*/         
+ ** @file main.c
+ ** @version 01.12
+ ** @brief
+ **         Main module.
+ **         This module contains user's application code.
+ */
 /*!
-**  @addtogroup main_module main module documentation
-**  @{
-*/         
+ **  @addtogroup main_module main module documentation
+ **  @{
+ */
 /* MODULE main */
-
 
 /* Including needed modules to compile this module/procedure */
 #include "Cpu.h"
@@ -37,55 +36,67 @@
 #include "IO_Map.h"
 #include "OS.h"
 
-
 /* User includes (#include below this line is not maintained by Processor Expert) */
 
-void toto_func(void){
-	PTCDD_PTCDD0=1;
-	while(1){
-		PTCD_PTCD0=1;
-		os_sleep(500);
-		PTCD_PTCD0=0;
-		os_sleep(500);
-	}
+void toto_func(void) {
+	PTCDD_PTCDD0 = 1;
+
+	PTCD_PTCD0 = 1;
+	os_sleep(500);
+	PTCD_PTCD0 = 0;
+	os_sleep(500);
+
 }
 
-void main(void){
-  /* Write your local variable definition here */
+void titi_func(void) {
+	PTCDD_PTCDD1 = 1;
 
-  /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
-  PE_low_level_init();
-  /*** End of Processor Expert internal initialization.                    ***/
-  
-  os_init();
-  process_init(&process[0],"TOTO",toto_func);
-  process_start(&process[0]);
-  
-  /* Write your code here */
-  /* For example: for(;;) { } */
-  for(;;){
-	  
-  }
-  /*** Don't write any code pass this line, or it will be deleted during code generation. ***/
-  /*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
-  #ifdef PEX_RTOS_START
-    PEX_RTOS_START();                  /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
-  #endif
-  /*** End of RTOS startup code.  ***/
-  /*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
-  for(;;){}
-  /*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
+	PTCD_PTCD1 = 1;
+	os_sleep(500);
+	PTCD_PTCD1 = 0;
+	os_sleep(500);
+
+}
+
+void main(void) {
+	/* Write your local variable definition here */
+
+	/*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
+	PE_low_level_init();
+	/*** End of Processor Expert internal initialization.                    ***/
+
+	os_init();
+	process_init(&process[0], "TOTO", toto_func);
+	process_init(&process[1], "TITI", titi_func);
+	process_start(&process[0]);
+	process_start(&process[1]);
+
+	/* Write your code here */
+	/* For example: for(;;) { } */
+	for (;;) {
+
+	}
+	/*** Don't write any code pass this line, or it will be deleted during code generation. ***/
+	/*** RTOS startup code. Macro PEX_RTOS_START is defined by the RTOS component. DON'T MODIFY THIS CODE!!! ***/
+#ifdef PEX_RTOS_START
+	PEX_RTOS_START(); /* Startup of the selected RTOS. Macro is defined by the RTOS component. */
+#endif
+	/*** End of RTOS startup code.  ***/
+	/*** Processor Expert end of main routine. DON'T MODIFY THIS CODE!!! ***/
+	for (;;) {
+	}
+	/*** Processor Expert end of main routine. DON'T WRITE CODE BELOW!!! ***/
 } /*** End of main routine. DO NOT MODIFY THIS TEXT!!! ***/
 
 /* END main */
 /*!
-** @}
-*/
+ ** @}
+ */
 /*
-** ###################################################################
-**
-**     This file was created by Processor Expert 10.3 [05.09]
-**     for the Freescale HCS08 series of microcontrollers.
-**
-** ###################################################################
-*/
+ ** ###################################################################
+ **
+ **     This file was created by Processor Expert 10.3 [05.09]
+ **     for the Freescale HCS08 series of microcontrollers.
+ **
+ ** ###################################################################
+ */
