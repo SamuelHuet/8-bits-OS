@@ -13,6 +13,7 @@ Linker      : SmartLinker V-5.0.51 Build 14019, Jan 20 2014
 FILE SECTION
 ---------------------------------------------------------------------------------------------
 OS_c.obj                                Model: SMALL,         Lang: ANSI-C
+chained_list_c.obj                      Model: SMALL,         Lang: ANSI-C
 main_c.obj                              Model: SMALL,         Lang: ANSI-C
 start08_c.obj                           Model: SMALL,         Lang: ANSI-C
 Cpu_c.obj                               Model: SMALL,         Lang: ANSI-C
@@ -27,16 +28,16 @@ Entry point: 0xE004 (_EntryPoint)
 _startupData is allocated at 0xE07A and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x80     209
-  _Copy    *toCopyDownBeg 0xE2AF
+  _Range   pZeroOut       0x80     252
+  _Copy    *toCopyDownBeg 0xE34E
 } _startupData;
 
 *********************************************************************************************
 SECTION-ALLOCATION SECTION
 Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
-.text                            546     R     0xE088     0xE2A9   ROM
-.rodata1                           5     R     0xE2AA     0xE2AE   ROM
+.text                            700     R     0xE088     0xE343   ROM
+.rodata1                          10     R     0xE344     0xE34D   ROM
 .abs_section_ffbd                  1     R     0xFFBD     0xFFBD   .absSeg0
 .abs_section_ffbf                  1     R     0xFFBF     0xFFBF   .absSeg1
 .abs_section_0                     1   N/I        0x0        0x0   .absSeg2
@@ -143,15 +144,16 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_1814                  2   N/I     0x1814     0x1815   .absSeg103
 .abs_section_1816                  2   N/I     0x1816     0x1817   .absSeg104
 .abs_section_ffce                 50     R     0xFFCE     0xFFFF   .absSeg105
+.bss                              41   R/W       0x80       0xA8   RAM
 .startData                        14     R     0xE07A     0xE087   ROM
 .init                            122     R     0xE000     0xE079   ROM
-.common                          209   R/W       0x80      0x150   RAM
-.stack                            64   R/W      0x151      0x190   RAM
-.copy                              2     R     0xE2AF     0xE2B0   ROM
+.common                          211   R/W       0xA9      0x17B   RAM
+.stack                            64   R/W      0x17C      0x1BB   RAM
+.copy                              2     R     0xE34E     0xE34F   ROM
 
 Summary of section sizes per section type:
-READ_ONLY (R):         2E5 (dec:      741)
-READ_WRITE (R/W):      111 (dec:      273)
+READ_ONLY (R):         384 (dec:      900)
+READ_WRITE (R/W):      13C (dec:      316)
 NO_INIT (N/I):          79 (dec:      121)
 
 *********************************************************************************************
@@ -165,30 +167,40 @@ OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 MODULE:                 -- OS_c.obj --
 - PROCEDURES:
-     process_init                              E088      4C      76       1   .text       
-     os_init                                   E0D4      37      55       1   .text       
-     os_sleep                                  E10B      20      32       2   .text       
-     process_start                             E12B       4       4       1   .text       
+     process_init                              E088      4C      76       2   .text       
+     os_init                                   E0D4      3A      58       1   .text       
+     os_sleep                                  E10E      20      32       4   .text       
+     process_start                             E12E      16      22       2   .text       
 - VARIABLES:
-     process                                     80      4C      76       4   .common     
-     stopped                                     CC       2       2       1   .common     
-     waiting                                     CE       2       2       1   .common     
-     process_by_prio                             D0      80     128       2   .common     
+     process                                     A9      4C      76       6   .common     
+     stopped                                     F5       2       2       1   .common     
+     waiting                                     F7       2       2       1   .common     
+     process_by_prio                             F9      80     128       2   .common     
+     ready                                      179       2       2       2   .common     
+MODULE:                 -- chained_list_c.obj --
+- PROCEDURES:
+     chained_list_append                       E144      27      39       1   .text       
+     chained_list_create_element               E16B      25      37       1   .text       
+- VARIABLES:
+     elem_index                                  80       1       1       1   .bss        
+     elems                                       81      28      40       2   .bss        
 MODULE:                 -- main_c.obj --
 - PROCEDURES:
-     toto_func                                 E12F      23      35       1   .text       
-     main                                      E152      20      32       1   .text       
+     toto_func                                 E190      22      34       1   .text       
+     titi_func                                 E1B2      22      34       1   .text       
+     main                                      E1D4      38      56       1   .text       
 - VARIABLES:
-     STRING.TOTO.1                             E2AA       5       5       1   .rodata1    
+     STRING.TOTO.1                             E344       5       5       1   .rodata1    
+     STRING.TITI.2                             E349       5       5       1   .rodata1    
 MODULE:                 -- start08_c.obj --
 - PROCEDURES:
-     loadByte                                  E172       E      14       5   .text       
-     Init                                      E180      6D     109       1   .text       
-     _Startup                                  E1ED       9       9       1   .text       
+     loadByte                                  E20C       E      14       5   .text       
+     Init                                      E21A      6D     109       1   .text       
+     _Startup                                  E287       9       9       1   .text       
 - VARIABLES:
      _startupData                              E07A       6       6       4   .startData  
 - LABELS:
-     __SEG_END_SSTACK                           191       0       0       1               
+     __SEG_END_SSTACK                           1BC       0       0       1               
 MODULE:                 -- Cpu_c.obj --
 - PROCEDURES:
      Cpu_Interrupt                             E000       4       4      24   .init       
@@ -197,7 +209,7 @@ MODULE:                 -- Cpu_c.obj --
 - VARIABLES:
      NVPROT_INIT                               FFBD       1       1       0   .abs_section_ffbd
      NVOPT_INIT                                FFBF       1       1       0   .abs_section_ffbf
-     CCR_lock                                   150       1       1       1   .common     
+     CCR_lock                                   17B       1       1       1   .common     
 MODULE:                 -- IO_Map_c.obj --
 - PROCEDURES:
 - VARIABLES:
@@ -205,8 +217,8 @@ MODULE:                 -- IO_Map_c.obj --
      _PTADD                                       1       1       1       0   .abs_section_1
      _PTBD                                        2       1       1       0   .abs_section_2
      _PTBDD                                       3       1       1       0   .abs_section_3
-     _PTCD                                        4       1       1       2   .abs_section_4
-     _PTCDD                                       5       1       1       1   .abs_section_5
+     _PTCD                                        4       1       1       4   .abs_section_4
+     _PTCDD                                       5       1       1       2   .abs_section_5
      _PTDD                                        6       1       1       0   .abs_section_6
      _PTDDD                                       7       1       1       0   .abs_section_7
      _KBISC                                       C       1       1       0   .abs_section_c
@@ -310,21 +322,22 @@ MODULE:                 -- Vectors_c.obj --
      _vect                                     FFCE      32      50       0   .abs_section_ffce
 MODULE:                 -- rtshc08.o (ansiis.lib) --
 - PROCEDURES:
-     _PUSH_ARGS_L                              E1F6      20      32       1   .text       
-     _ENTER_UNARY_L                            E216      29      41       1   .text       
-     _ENTER_BINARY_L                           E23F      16      22       1   .text       
-     _LCMP_k_rel_j                             E255      1F      31       1   .text       
-     _LINC                                     E274      16      22       1   .text       
-     _LCMP                                     E28A       6       6       1   .text       
-     _POP32                                    E290      1A      26       1   .text       
+     _PUSH_ARGS_L                              E290      20      32       1   .text       
+     _ENTER_UNARY_L                            E2B0      29      41       1   .text       
+     _ENTER_BINARY_L                           E2D9      16      22       1   .text       
+     _LCMP_k_rel_j                             E2EF      1F      31       1   .text       
+     _LINC                                     E30E      16      22       1   .text       
+     _LCMP                                     E324       6       6       1   .text       
+     _POP32                                    E32A      1A      26       1   .text       
 - VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
-  OS_c.obj                                   208    167      0
-  main_c.obj                                   0     67      5
+  OS_c.obj                                   210    188      0
+  chained_list_c.obj                          41     76      0
+  main_c.obj                                   0    124     10
   start08_c.obj                                0    132      0
   Cpu_c.obj                                    1    122      2
   IO_Map_c.obj                               121      0      0
@@ -336,15 +349,17 @@ MODULE STATISTIC
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  process_init os_init os_sleep process_start toto_func main loadByte Init 
-  _Startup _PUSH_ARGS_L _ENTER_UNARY_L _ENTER_BINARY_L _LCMP_k_rel_j _LINC 
-  _LCMP _POP32 
+  process_init os_init os_sleep process_start chained_list_append 
+  chained_list_create_element toto_func titi_func main loadByte Init _Startup 
+  _PUSH_ARGS_L _ENTER_UNARY_L _ENTER_BINARY_L _LCMP_k_rel_j _LINC _LCMP _POP32 
+SECTION: ".bss"
+  elem_index elems 
 SECTION: ".init"
   Cpu_Interrupt _EntryPoint PE_low_level_init 
 SECTION: ".rodata1"
-  STRING.TOTO.1 
+  STRING.TOTO.1 STRING.TITI.2 
 SECTION: ".common"
-  process stopped waiting process_by_prio CCR_lock 
+  process stopped waiting process_by_prio ready CCR_lock 
 SECTION: ".abs_section_ffbd"
   NVPROT_INIT 
 SECTION: ".abs_section_ffbf"
@@ -566,8 +581,8 @@ OBJECT LIST SORTED BY ADDRESS
      _PTADD                                       1       1       1       0   .abs_section_1
      _PTBD                                        2       1       1       0   .abs_section_2
      _PTBDD                                       3       1       1       0   .abs_section_3
-     _PTCD                                        4       1       1       2   .abs_section_4
-     _PTCDD                                       5       1       1       1   .abs_section_5
+     _PTCD                                        4       1       1       4   .abs_section_4
+     _PTCDD                                       5       1       1       2   .abs_section_5
      _PTDD                                        6       1       1       0   .abs_section_6
      _PTDDD                                       7       1       1       0   .abs_section_7
      _KBISC                                       C       1       1       0   .abs_section_c
@@ -623,11 +638,14 @@ OBJECT LIST SORTED BY ADDRESS
      _TPM2C1V                                    59       2       2       0   .abs_section_59
      _TPM2C2SC                                   5B       1       1       0   .abs_section_5b
      _TPM2C2V                                    5C       2       2       0   .abs_section_5c
-     process                                     80      4C      76       4   .common     
-     stopped                                     CC       2       2       1   .common     
-     waiting                                     CE       2       2       1   .common     
-     process_by_prio                             D0      80     128       2   .common     
-     CCR_lock                                   150       1       1       1   .common     
+     elem_index                                  80       1       1       1   .bss        
+     elems                                       81      28      40       2   .bss        
+     process                                     A9      4C      76       6   .common     
+     stopped                                     F5       2       2       1   .common     
+     waiting                                     F7       2       2       1   .common     
+     process_by_prio                             F9      80     128       2   .common     
+     ready                                      179       2       2       2   .common     
+     CCR_lock                                   17B       1       1       1   .common     
      _SRS                                      1800       1       1       0   .abs_section_1800
      _SBDFR                                    1801       1       1       0   .abs_section_1801
      _SOPT1                                    1802       1       1       1   .abs_section_1802
@@ -673,23 +691,27 @@ OBJECT LIST SORTED BY ADDRESS
      Cpu_Interrupt                             E000       4       4      24   .init       
      _EntryPoint                               E004      41      65       1   .init       
      PE_low_level_init                         E045      35      53       1   .init       
-     process_init                              E088      4C      76       1   .text       
-     os_init                                   E0D4      37      55       1   .text       
-     os_sleep                                  E10B      20      32       2   .text       
-     process_start                             E12B       4       4       1   .text       
-     toto_func                                 E12F      23      35       1   .text       
-     main                                      E152      20      32       1   .text       
-     loadByte                                  E172       E      14       5   .text       
-     Init                                      E180      6D     109       1   .text       
-     _Startup                                  E1ED       9       9       1   .text       
-     _PUSH_ARGS_L                              E1F6      20      32       1   .text       
-     _ENTER_UNARY_L                            E216      29      41       1   .text       
-     _ENTER_BINARY_L                           E23F      16      22       1   .text       
-     _LCMP_k_rel_j                             E255      1F      31       1   .text       
-     _LINC                                     E274      16      22       1   .text       
-     _LCMP                                     E28A       6       6       1   .text       
-     _POP32                                    E290      1A      26       1   .text       
-     STRING.TOTO.1                             E2AA       5       5       1   .rodata1    
+     process_init                              E088      4C      76       2   .text       
+     os_init                                   E0D4      3A      58       1   .text       
+     os_sleep                                  E10E      20      32       4   .text       
+     process_start                             E12E      16      22       2   .text       
+     chained_list_append                       E144      27      39       1   .text       
+     chained_list_create_element               E16B      25      37       1   .text       
+     toto_func                                 E190      22      34       1   .text       
+     titi_func                                 E1B2      22      34       1   .text       
+     main                                      E1D4      38      56       1   .text       
+     loadByte                                  E20C       E      14       5   .text       
+     Init                                      E21A      6D     109       1   .text       
+     _Startup                                  E287       9       9       1   .text       
+     _PUSH_ARGS_L                              E290      20      32       1   .text       
+     _ENTER_UNARY_L                            E2B0      29      41       1   .text       
+     _ENTER_BINARY_L                           E2D9      16      22       1   .text       
+     _LCMP_k_rel_j                             E2EF      1F      31       1   .text       
+     _LINC                                     E30E      16      22       1   .text       
+     _LCMP                                     E324       6       6       1   .text       
+     _POP32                                    E32A      1A      26       1   .text       
+     STRING.TOTO.1                             E344       5       5       1   .rodata1    
+     STRING.TITI.2                             E349       5       5       1   .rodata1    
      NVPROT_INIT                               FFBD       1       1       0   .abs_section_ffbd
      NVOPT_INIT                                FFBF       1       1       0   .abs_section_ffbf
      _vect                                     FFCE      32      50       0   .abs_section_ffce
@@ -699,7 +721,9 @@ UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
 OS_c.obj:
-  toto 
+  toto os_start 
+chained_list_c.obj:
+  chained_list_pop_first 
 rtshc08.o (ansiis.lib):
   _PUSH_ARGS_D _ENTER_UNARY_L64 _ENTER_UNARY_L64_4 _ENTER_BINARY_L_RC 
   _ENTER_BINARY_L_LC _ENTER_BINARY_L64 _ENTER_BINARY_L64_LC 
@@ -730,7 +754,7 @@ rtshc08.o (ansiis.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xE2AF ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xE34E ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -741,11 +765,16 @@ _EntryPoint               USES _SOPT1 _SPMSC1 _SPMSC2 _SPMSC3 _ICSTRM _ICSSC
                                 _ICSC1 _ICSC2 _Startup 
 PE_low_level_init         USES _SCGC1 _SCGC2 _PTASE _PTBSE _PTCSE _PTDSE 
                                 _PTADS _PTBDS _PTCDS _PTDDS CCR_lock 
-os_init                   USES process stopped waiting process_by_prio 
+os_init                   USES process ready stopped waiting process_by_prio 
 os_sleep                  USES _LINC _POP32 _LCMP 
+process_start             USES chained_list_create_element ready 
+                                chained_list_append 
+chained_list_create_element USES elem_index elems 
 toto_func                 USES _PTCDD _PTCD os_sleep 
+titi_func                 USES _PTCDD _PTCD os_sleep 
 main                      USES PE_low_level_init os_init process STRING.TOTO.1 
-                                toto_func process_init process_start 
+                                toto_func process_init STRING.TITI.2 titi_func 
+                                process_start 
 Init                      USES _startupData loadByte 
 _Startup                  USES __SEG_END_SSTACK Init main 
 _ENTER_BINARY_L           USES _PUSH_ARGS_L 
@@ -784,8 +813,16 @@ DEPENDENCY TREE
  |  |             
  |  +- process_init        
  |  |    
+ |  +- titi_func           
+ |  |  | 
+ |  |  +- os_sleep             (see above)
+ |  |     
  |  +- process_start       
- |       
+ |     | 
+ |     +- chained_list_create_element
+ |     |    
+ |     +- chained_list_append 
+ |          
  +- _EntryPoint         
     | 
     +- _Startup            
@@ -808,6 +845,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 8
-Total size of all blocks to be downloaded: 741
+Number of blocks to be downloaded: 7
+Total size of all blocks to be downloaded: 900
 

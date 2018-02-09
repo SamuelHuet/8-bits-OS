@@ -55,7 +55,7 @@
     </GenFiles>
     <SignalListFile>Documentation\OS_SIGNALS.txt</SignalListFile>
     <DestinationCompiler>MetrowerksHCS08CC</DestinationCompiler>
-    <ProjectModificationStamp>2</ProjectModificationStamp>
+    <ProjectModificationStamp>3</ProjectModificationStamp>
   </Options>
   <CpuID_2>
     <Generated>false</Generated>

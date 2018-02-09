@@ -6,13 +6,14 @@
  */
 
 #include "OS.h"
+#include "chained_list.h"
 
 T_process process[NB_PROCESS]; /* tableau de process */
 T_process *running_process=NULL; /*Pointeur sur le processus actif  */
-T_process_list stopped; /* process non démarrer */
-T_process_list waiting; /*process en attente */
-T_process_list process_by_prio[NB_PRIORITY]; /* tableau de liste de priorité */ 
-T_process_list ready; /*process en attente d'election*/
+T_elem_list_process * stopped; /* process non démarrer */
+T_elem_list_process * waiting; /*process en attente */
+T_elem_list_process * process_by_prio[NB_PRIORITY]; /* tableau de liste de priorité */ 
+T_elem_list_process * ready; /*process en attente d'election*/
 
 void toto (void){
 }
@@ -52,15 +53,16 @@ void os_sleep(unsigned long time){
 }
 
 void process_start(T_process *process){
-	chained_list_append(ready, process);
+	T_elem_list_process *elem = chained_list_create_element(process);
+	chained_list_append(ready, elem);
 }
 
 void os_start(){
-	T_process *process = ready->process;
+	T_elem_list_process *elem = chained_list_get_first(ready);
 	while(1){
-		process->fonction();
-		chained_list_pop_first(ready);
-		chained_list_append(process);
-		process = ready->process
+		elem->process->fonction();
+		chained_list_pop_first(&ready);
+		chained_list_append(ready, elem);
+		elem = chained_list_get_first(ready);
 	}
 }

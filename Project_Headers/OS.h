@@ -40,7 +40,7 @@ typedef struct _elem{
 	T_process *process;
 }T_elem_list_process;
 
-typedef T_elem_list_process *T_process_list;
+//T_elem_list_process *
 
 extern T_process process[NB_PROCESS];
 

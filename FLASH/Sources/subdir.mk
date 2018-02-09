@@ -8,36 +8,43 @@
 C_SRCS_QUOTED += \
 "../Sources/Events.c" \
 "../Sources/OS.c" \
+"../Sources/chained_list.c" \
 "../Sources/main.c" \
 
 C_SRCS += \
 ../Sources/Events.c \
 ../Sources/OS.c \
+../Sources/chained_list.c \
 ../Sources/main.c \
 
 OBJS += \
 ./Sources/Events_c.obj \
 ./Sources/OS_c.obj \
+./Sources/chained_list_c.obj \
 ./Sources/main_c.obj \
 
 OBJS_QUOTED += \
 "./Sources/Events_c.obj" \
 "./Sources/OS_c.obj" \
+"./Sources/chained_list_c.obj" \
 "./Sources/main_c.obj" \
 
 C_DEPS += \
 ./Sources/Events_c.d \
 ./Sources/OS_c.d \
+./Sources/chained_list_c.d \
 ./Sources/main_c.d \
 
 C_DEPS_QUOTED += \
 "./Sources/Events_c.d" \
 "./Sources/OS_c.d" \
+"./Sources/chained_list_c.d" \
 "./Sources/main_c.d" \
 
 OBJS_OS_FORMAT += \
 ./Sources/Events_c.obj \
 ./Sources/OS_c.obj \
+./Sources/chained_list_c.obj \
 ./Sources/main_c.obj \
 
 
@@ -63,9 +70,17 @@ Sources/OS_c.obj: ../Sources/OS.c
 	@echo 'Finished building: $<'
 	@echo ' '
 
-Sources/main_c.obj: ../Sources/main.c
+Sources/chained_list_c.obj: ../Sources/chained_list.c
 	@echo 'Building file: $<'
 	@echo 'Executing target #3 $<'
+	@echo 'Invoking: HCS08 Compiler'
+	"$(HC08ToolsEnv)/chc08" -ArgFile"Sources/chained_list.args" -ObjN="Sources/chained_list_c.obj" "$<" -Lm="$(@:%.obj=%.d)" -LmCfg=xilmou
+	@echo 'Finished building: $<'
+	@echo ' '
+
+Sources/main_c.obj: ../Sources/main.c
+	@echo 'Building file: $<'
+	@echo 'Executing target #4 $<'
 	@echo 'Invoking: HCS08 Compiler'
 	"$(HC08ToolsEnv)/chc08" -ArgFile"Sources/main.args" -ObjN="Sources/main_c.obj" "$<" -Lm="$(@:%.obj=%.d)" -LmCfg=xilmou
 	@echo 'Finished building: $<'

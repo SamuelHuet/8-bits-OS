@@ -6,6 +6,7 @@
 -WmsgSd1912 
 -Add("$(ProjDirPath)/FLASH/Sources/Events_c.obj"
 "$(ProjDirPath)/FLASH/Sources/OS_c.obj"
+"$(ProjDirPath)/FLASH/Sources/chained_list_c.obj"
 "$(ProjDirPath)/FLASH/Sources/main_c.obj"
 "$(ProjDirPath)/FLASH/Project_Settings/Startup_Code/start08_c.obj"
 "$(ProjDirPath)/FLASH/Generated_Code/Cpu_c.obj"
